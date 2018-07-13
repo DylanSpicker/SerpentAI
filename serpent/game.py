@@ -95,7 +95,8 @@ class Game(offshoot.Pluggable):
         return {
             "steam": SteamGameLauncher,
             "executable": ExecutableGameLauncher,
-            "web_browser": WebBrowserGameLauncher
+            "web_browser": WebBrowserGameLauncher,
+            "retroarch": RetroarchGameLauncher
         }
 
     @property
@@ -247,6 +248,8 @@ class Game(offshoot.Pluggable):
                     # time.sleep(0.1)
 
                 self.game_frame_limiter.stop_and_delay()
+        except Exception as e:
+            print(e)
         finally:
             self.stop_frame_grabber()
 

@@ -6,7 +6,6 @@ from torch import nn, optim
 
 from serpent.machine_learning.reinforcement_learning.rainbow_dqn.dqn import DQN
 
-
 class RainbowAgent:
     def __init__(
         self,

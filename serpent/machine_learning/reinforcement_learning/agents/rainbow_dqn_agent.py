@@ -44,7 +44,7 @@ class RainbowDQNAgent(Agent):
         game_inputs=None,
         callbacks=None,
         evaluate_every=50,  # Every 50 episodes
-        evaluate_for=5,  # For 5 episodes
+        evaluate_for=5,     # For 5 episodes
         rainbow_kwargs=None
     ):
         super().__init__(name, game_inputs=game_inputs, callbacks=callbacks)
@@ -157,7 +157,7 @@ class RainbowDQNAgent(Agent):
         frames = list()
 
         for game_frame in state.frames:
-            frames.append(torch.tensor(torch.from_numpy(game_frame.frame), dtype=torch.float32))
+            frames.append(torch.tensor(torch.from_numpy(np.rollaxis(game_frame.frame, -1, 0)), dtype=torch.float32))
 
         self.current_state = torch.stack(frames, 0)
 
@@ -212,10 +212,9 @@ class RainbowDQNAgent(Agent):
                 self.current_episode += 1
 
             self.current_step += 1
-
+            print(self.current_step)
             self.replay_memory.append(self.current_state, self.current_action, reward, terminal)
             self.replay_memory.priority_weight = min(self.replay_memory.priority_weight + self.priority_weight_increase, 1)
-
             self.agent.learn(self.replay_memory)
 
             if self.current_step % self.target_update == 0:
@@ -229,7 +228,6 @@ class RainbowDQNAgent(Agent):
 
                 if self.callbacks.get("after_update") is not None:
                     self.callbacks["after_update"]()
-
         elif self.mode == RainbowDQNAgentModes.EVALUATE:
             pass
 
@@ -258,7 +256,7 @@ class RainbowDQNAgent(Agent):
 
     def set_mode(self, rainbow_dqn_mode):
         self.mode = rainbow_dqn_mode
-
+        print("Set Mode: \t", self.mode)
         if self.mode == RainbowDQNAgentModes.OBSERVE:
             self.agent.train()
             self.analytics_client.track(event_key="AGENT_MODE", data={"mode": f"Observing - {self.observe_steps - self.current_step} Steps Remaining"})

@@ -21,6 +21,8 @@ class SerpentGame(Game, metaclass=Singleton):
         kwargs["executable_path"] = "EXECUTABLE_PATH"
         kwargs["url"] = "URL"
         kwargs["browser"] = WebBrowser.DEFAULT
+        kwargs["rom_path"] = "ROM_PATH"
+        kwargs["core_path"] = "CORE_PATH"
 
         super().__init__(**kwargs)
 
@@ -37,35 +39,3 @@ class SerpentGame(Game, metaclass=Singleton):
         }
 
         return regions
-
-    def after_launch(self):
-        self.is_launched = True
-
-        current_attempt = 1
-
-        while current_attempt <= 100:
-            self.window_id = self.window_controller.locate_window(self.window_name)
-
-            if self.window_id not in [0, "0"]:
-                break
-
-            time.sleep(0.1)
-
-        time.sleep(0.5)
-
-        if self.window_id in [0, "0"]:
-            raise SerpentError("Game window not found...")
-
-        self.window_controller.move_window(self.window_id, 0, 0)
-
-        self.dashboard_window_id = self.window_controller.locate_window("Serpent.AI Dashboard")
-
-        # TODO: Test on macOS and Linux
-        if self.dashboard_window_id is not None and self.dashboard_window_id not in [0, "0"]:
-            self.window_controller.bring_window_to_top(self.dashboard_window_id)
-
-        self.window_controller.focus_window(self.window_id)
-
-        self.window_geometry = self.extract_window_geometry()
-
-        print(self.window_geometry)
