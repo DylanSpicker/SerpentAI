@@ -518,12 +518,12 @@ def generate_game_plugin():
     print("")
 
     game_name = input("What is the name of the game? (Titleized, No Spaces i.e. AwesomeGame): \n")
-    game_platform = input("How is the game launched? (One of: 'steam', 'executable', 'web_browser'): \n")
+    game_platform = input("How is the game launched? (One of: 'steam', 'executable', 'web_browser', 'retroarch'): \n")
 
     if game_name in [None, ""]:
         raise Exception("Invalid game name.")
 
-    if game_platform not in ["steam", "executable", "web_browser"]:
+    if game_platform not in ["steam", "executable", "web_browser", "retroarch"]:
         raise Exception("Invalid game platform.")
 
     prepare_game_plugin(game_name, game_platform)
@@ -580,6 +580,8 @@ def prepare_game_plugin(game_name, game_platform):
         contents = contents.replace('kwargs["executable_path"] = "EXECUTABLE_PATH"', "")
         contents = contents.replace('kwargs["url"] = "URL"', "")
         contents = contents.replace('kwargs["browser"] = WebBrowser.DEFAULT', "")
+        contents = contents.replace('kwargs["rom_path"] = "ROM_PATH"', "")
+        contents = contents.replace('kwargs["core_path"] = "CORE_PATH"', "")
     elif game_platform == "executable":
         contents = contents.replace("PLATFORM", "executable")
 
@@ -588,11 +590,24 @@ def prepare_game_plugin(game_name, game_platform):
         contents = contents.replace('kwargs["app_args"] = None', "")
         contents = contents.replace('kwargs["url"] = "URL"', "")
         contents = contents.replace('kwargs["browser"] = WebBrowser.DEFAULT', "")
+        contents = contents.replace('kwargs["rom_path"] = "ROM_PATH"', "")
+        contents = contents.replace('kwargs["core_path"] = "CORE_PATH"', "")
     elif game_platform == "web_browser":
         contents = contents.replace("PLATFORM", "web_browser")
 
         contents = contents.replace('kwargs["app_id"] = "APP_ID"', "")
         contents = contents.replace('kwargs["app_args"] = None', "")
+        contents = contents.replace('kwargs["executable_path"] = "EXECUTABLE_PATH"', "")
+        contents = contents.replace('kwargs["rom_path"] = "ROM_PATH"', "")
+        contents = contents.replace('kwargs["core_path"] = "CORE_PATH"', "")
+    elif game_platform == "retroarch":
+        contents = contents.replace("PLATFORM", "retroarch")
+
+        contents = contents.replace("from serpent.game_launchers.web_browser_game_launcher import WebBrowser", "")
+        contents = contents.replace('kwargs["app_id"] = "APP_ID"', "")
+        contents = contents.replace('kwargs["app_args"] = None', "")
+        contents = contents.replace('kwargs["url"] = "URL"', "")
+        contents = contents.replace('kwargs["browser"] = WebBrowser.DEFAULT', "")
         contents = contents.replace('kwargs["executable_path"] = "EXECUTABLE_PATH"', "")
 
     with open(f"{plugin_destination_path}/files/serpent_{game_name}_game.py".replace("/", os.sep), "w") as f:

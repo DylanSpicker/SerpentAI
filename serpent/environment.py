@@ -16,7 +16,6 @@ class Environment:
 
         self.game_api = game_api
         self.input_controller = input_controller
-
         self.game_state = dict()
 
         self.analytics_client = AnalyticsClient(project_key=config["analytics"]["topic"])

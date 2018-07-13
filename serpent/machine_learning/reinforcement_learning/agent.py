@@ -50,7 +50,7 @@ class Agent:
 
         if self.callbacks.get("after_observe") is not None:
             self.callbacks["after_observe"]()
-
+            
     def reset(self, **kwargs):
         self.current_state = None
 

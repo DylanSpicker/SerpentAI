@@ -95,7 +95,8 @@ class Game(offshoot.Pluggable):
         return {
             "steam": SteamGameLauncher,
             "executable": ExecutableGameLauncher,
-            "web_browser": WebBrowserGameLauncher
+            "web_browser": WebBrowserGameLauncher,
+            "retroarch": RetroarchGameLauncher
         }
 
     @property
